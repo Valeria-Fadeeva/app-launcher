@@ -1,35 +1,28 @@
+extern crate dotenv;
+
 use std::process::{Command, Stdio};
-use std::{env, fs, str};
+use std::{env, str};
+use std::io::{self, Write};
+use dotenv::dotenv;
 
-fn read_file(watch_path: &str) -> String {
-    let filepath: String;
-
-    let filepath_r = fs::read_to_string(watch_path);
-    filepath = match filepath_r {
-        Ok(filepath) => filepath,
-        Err(error) => {
-            panic!("Problem opening the file: {:?}", error)
-        }
-    };
-
-    return filepath;
-}
 
 fn main() {
+    dotenv().ok();
     let args: Vec<String> = env::args().collect();
 
-    let python_path = ".env";
-    let p = read_file(python_path);
+    let python_path = env::var("PYTHON_PATH").unwrap();
+    let python_path = python_path.as_str();
 
     let app: &str = if cfg!(target_os = "windows") {
-        &*p.trim()
+        python_path
     } else if cfg!(target_os = "linux") {
         "python3"
     } else {
         "python3"
     };
 
-    let execute = "mock-command.py";
+    let execute = env::var("EXECUTE").unwrap();
+    let execute = execute.as_str();
 
     let child = if args.len() == 1 {
         Command::new(app)
@@ -55,4 +48,6 @@ fn main() {
     let out = str::from_utf8(&stdout).unwrap();
 
     println!("{}", out);
+
+    io::stdout().flush().unwrap();
 }
