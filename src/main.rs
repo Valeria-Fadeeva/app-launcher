@@ -1,10 +1,9 @@
 extern crate dotenv;
 
+use dotenv::dotenv;
+use std::io::{self, Write};
 use std::process::{Command, Stdio};
 use std::{env, str};
-use std::io::{self, Write};
-use dotenv::dotenv;
-
 
 fn main() {
     dotenv().ok();
