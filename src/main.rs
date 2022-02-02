@@ -20,6 +20,8 @@ fn main() {
         "python3"
     };
 
+    let par = "-s";
+
     let execute = env::var("EXECUTE").unwrap();
     let execute = execute.as_str();
 
@@ -33,7 +35,7 @@ fn main() {
             .expect("Could not run the command") // finally run the command
     } else {
         Command::new(app)
-            .args([execute, &args[1]])
+            .args([execute, par, &args[1]])
             .stderr(Stdio::null()) // don't care about stderr
             .stdout(Stdio::inherit()) // set up stdout so we can read it
             .stdin(Stdio::inherit()) // set up stdin so we can write on it
